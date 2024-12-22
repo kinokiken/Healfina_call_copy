@@ -1,0 +1,325 @@
+basePath: /
+definitions:
+  models.AddDialogResponse:
+    properties:
+      dialog_id:
+        description: dialog id
+        type: string
+    type: object
+  models.AddRecordRequest:
+    properties:
+      dialog_id:
+        description: dialog id
+        type: string
+      record:
+        description: record
+    type: object
+  models.ErrorResponse:
+    properties:
+      message:
+        description: message
+        type: string
+    type: object
+  models.GenericResponse:
+    properties:
+      status:
+        description: status
+        type: string
+    type: object
+  models.GetOverallSummaryResponse:
+    properties:
+      overall_summary:
+        description: overall summary
+        type: string
+    type: object
+  models.RecordAfter:
+    properties:
+      dialog_id:
+        description: dialog id
+        type: string
+      id:
+        description: |-
+          id
+          Format: byte
+        items:
+          type: integer
+        type: array
+      record:
+        description: record
+      time:
+        description: |-
+          time
+          Format: date-time
+        type: string
+      user_id:
+        description: user id
+        type: integer
+    type: object
+  models.SetMessagesRequest:
+    properties:
+      dialog_id:
+        description: ID диалога
+        type: string
+      messages:
+        description: Сообщения
+        items:
+          $ref: '#/definitions/models.SetMessagesRequestMessagesItems0'
+        type: array
+    type: object
+  models.SetMessagesRequestMessagesItems0:
+    properties:
+      bot:
+        description: Ответ от бота
+        type: string
+      date:
+        description: |-
+          Дата сообщения
+          Format: date-time
+        type: string
+      user:
+        description: Сообщение от пользователя
+        type: string
+    type: object
+  models.SetMessagesResponse:
+    properties:
+      status:
+        description: status
+        type: string
+    type: object
+  models.UpdateRecordRequest:
+    properties:
+      record:
+        description: record
+      record_id:
+        description: record id
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API documentation for Healfina project
+  title: Healfina API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает главную страницу с пользовательскими данными и настройками.
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Успешный ответ с данными пользователя
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить главную страницу
+      tags:
+      - main
+  /dialog:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новый диалог с заранее подготовленным планом общения
+        или с последним сохранённым планом.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно добавлен новый диалог
+          schema:
+            $ref: '#/definitions/models.AddDialogResponse'
+        "400":
+          description: Некорректный запрос
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Добавить диалог для пользователя
+      tags:
+      - dialog
+  /dialog/messages:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет или добавляет сообщения в диалог пользователя.
+      parameters:
+      - description: Сообщения для добавления
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SetMessagesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщения успешно добавлены
+          schema:
+            $ref: '#/definitions/models.SetMessagesResponse'
+        "400":
+          description: Неверный формат запроса
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Установить сообщения для диалога
+      tags:
+      - dialog
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные профиля текущего пользователя.
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Данные пользователя
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Некорректный запрос
+          schema:
+            type: string
+        "404":
+          description: Пользователь не найден
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить профиль пользователя
+      tags:
+      - profile
+  /records:
+    get:
+      consumes:
+      - application/json
+      description: Получает список всех записей пользователя.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список записей пользователя
+          schema:
+            items:
+              $ref: '#/definitions/models.RecordAfter'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить все записи пользователя
+      tags:
+      - records
+  /records/add:
+    put:
+      consumes:
+      - application/json
+      description: Добавляет новую запись для пользователя после завершения сессии.
+      parameters:
+      - description: Данные для добавления записи
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddRecordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное добавление записи
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+        "400":
+          description: Некорректный формат JSON
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Добавить запись пользователя
+      tags:
+      - records
+  /records/delete/:record_id:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет запись пользователя по ID.
+      parameters:
+      - description: ID записи
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное удаление записи
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Удалить запись пользователя
+      tags:
+      - records
+  /set_dark_mode:
+    post:
+      consumes:
+      - application/json
+      description: Переключает темный режим интерфейса для пользователя.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Состояние режима отображения
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Изменить режим отображения
+      tags:
+      - settings
+  /summary:
+    get:
+      consumes:
+      - application/json
+      description: Получает общий обзор данных пользователя на основе его ID.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ с общим обзором
+          schema:
+            $ref: '#/definitions/models.GetOverallSummaryResponse'
+        "500":
+          description: Ошибка при получении общего обзора
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Получить общий обзор
+      tags:
+      - summary
+swagger: "2.0"

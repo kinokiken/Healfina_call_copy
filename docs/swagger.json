@@ -1,0 +1,478 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API documentation for Healfina project",
+        "title": "Healfina API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Возвращает главную страницу с пользовательскими данными и настройками.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "main"
+                ],
+                "summary": "Получить главную страницу",
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ с данными пользователя",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dialog": {
+            "post": {
+                "description": "Добавляет новый диалог с заранее подготовленным планом общения или с последним сохранённым планом.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dialog"
+                ],
+                "summary": "Добавить диалог для пользователя",
+                "responses": {
+                    "200": {
+                        "description": "Успешно добавлен новый диалог",
+                        "schema": {
+                            "$ref": "#/definitions/models.AddDialogResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dialog/messages": {
+            "put": {
+                "description": "Обновляет или добавляет сообщения в диалог пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dialog"
+                ],
+                "summary": "Установить сообщения для диалога",
+                "parameters": [
+                    {
+                        "description": "Сообщения для добавления",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SetMessagesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщения успешно добавлены",
+                        "schema": {
+                            "$ref": "#/definitions/models.SetMessagesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный формат запроса",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "description": "Возвращает данные профиля текущего пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "profile"
+                ],
+                "summary": "Получить профиль пользователя",
+                "responses": {
+                    "200": {
+                        "description": "Данные пользователя",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Пользователь не найден",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/records": {
+            "get": {
+                "description": "Получает список всех записей пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Получить все записи пользователя",
+                "responses": {
+                    "200": {
+                        "description": "Список записей пользователя",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.RecordAfter"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/records/add": {
+            "put": {
+                "description": "Добавляет новую запись для пользователя после завершения сессии.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Добавить запись пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные для добавления записи",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AddRecordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешное добавление записи",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный формат JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/records/delete/:record_id": {
+            "delete": {
+                "description": "Удаляет запись пользователя по ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Удалить запись пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID записи",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешное удаление записи",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/set_dark_mode": {
+            "post": {
+                "description": "Переключает темный режим интерфейса для пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "settings"
+                ],
+                "summary": "Изменить режим отображения",
+                "responses": {
+                    "200": {
+                        "description": "Состояние режима отображения",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сервера",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/summary": {
+            "get": {
+                "description": "Получает общий обзор данных пользователя на основе его ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "summary"
+                ],
+                "summary": "Получить общий обзор",
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ с общим обзором",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetOverallSummaryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка при получении общего обзора",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.AddDialogResponse": {
+            "type": "object",
+            "properties": {
+                "dialog_id": {
+                    "description": "dialog id",
+                    "type": "string"
+                }
+            }
+        },
+        "models.AddRecordRequest": {
+            "type": "object",
+            "properties": {
+                "dialog_id": {
+                    "description": "dialog id",
+                    "type": "string"
+                },
+                "record": {
+                    "description": "record"
+                }
+            }
+        },
+        "models.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "description": "message",
+                    "type": "string"
+                }
+            }
+        },
+        "models.GenericResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "status",
+                    "type": "string"
+                }
+            }
+        },
+        "models.GetOverallSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "overall_summary": {
+                    "description": "overall summary",
+                    "type": "string"
+                }
+            }
+        },
+        "models.RecordAfter": {
+            "type": "object",
+            "properties": {
+                "dialog_id": {
+                    "description": "dialog id",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id\nFormat: byte",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "record": {
+                    "description": "record"
+                },
+                "time": {
+                    "description": "time\nFormat: date-time",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "user id",
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SetMessagesRequest": {
+            "type": "object",
+            "properties": {
+                "dialog_id": {
+                    "description": "ID диалога",
+                    "type": "string"
+                },
+                "messages": {
+                    "description": "Сообщения",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.SetMessagesRequestMessagesItems0"
+                    }
+                }
+            }
+        },
+        "models.SetMessagesRequestMessagesItems0": {
+            "type": "object",
+            "properties": {
+                "bot": {
+                    "description": "Ответ от бота",
+                    "type": "string"
+                },
+                "date": {
+                    "description": "Дата сообщения\nFormat: date-time",
+                    "type": "string"
+                },
+                "user": {
+                    "description": "Сообщение от пользователя",
+                    "type": "string"
+                }
+            }
+        },
+        "models.SetMessagesResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "status",
+                    "type": "string"
+                }
+            }
+        },
+        "models.UpdateRecordRequest": {
+            "type": "object",
+            "properties": {
+                "record": {
+                    "description": "record"
+                },
+                "record_id": {
+                    "description": "record id",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
