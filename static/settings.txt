@@ -1,0 +1,5 @@
+npm i
+npm install @fortawesome/fontawesome-free
+npm install @fortawesome/free-solid-svg-icons
+ng serve
+ng build --configuration production --base-href /static/

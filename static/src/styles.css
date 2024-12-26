@@ -1,0 +1,15 @@
+.banner h1{
+	margin-top: 300px;
+	font-size: 36px;
+	color: #245c81;
+	font-weight: bold;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+body.dark-mode .banner h1 {
+    color: #81c6f3;
+}

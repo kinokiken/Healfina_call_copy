@@ -20,6 +20,29 @@ type User struct {
 	SubscriptionStart   *time.Time `bson:"subscription_start" json:"subscription_start"`
 	SubscriptionEnd     *time.Time `bson:"subscription_end" json:"subscription_end"`
 	ChatMode            string     `bson:"chat_mode" json:"chat_mode"`
+	Password            *string    `bson:"password,omitempty"`
+}
+
+func SetUserPassword(userID int, password string) error {
+	collection := Client.Database("chatgpt_telegram_bot").Collection("user")
+
+	filter := bson.M{"chat_id": userID}
+
+	update := bson.M{
+		"$set": bson.M{"password": password}, // в реальном проекте -> хеш
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return fmt.Errorf("failed to update password: %v", err)
+	}
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("user not found or already has password")
+	}
+	return nil
 }
 
 func GetUserByID(user_id int) (*User, error) {

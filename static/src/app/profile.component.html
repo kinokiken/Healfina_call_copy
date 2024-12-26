@@ -1,0 +1,116 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+</head>
+
+<div class="container">
+    <div class="header">
+        <button (click)="goBack()" class="back-btn">Назад</button>
+        <img class="svg-icon" src="assets/img/logo-2.svg" alt="My Icon">
+    </div>
+    
+    <h1>Профиль пользователя</h1>
+
+    <div *ngIf="user">
+        <p><strong>Имя:</strong> {{ user.first_name }}</p>
+        <p><strong>Кол-во сессий:</strong> {{ user.n_sessions }}</p>
+        <p><strong>Незаписанных сессий:</strong> {{ user.n_unrecorded_sessions }}</p>
+    </div>
+
+    <hr />
+
+    <h2>Последние записи</h2>
+    
+    <div class="view-toggle">
+        <button (click)="switchToTableView()" class="btn btn-primary">Таблица с сортировкой</button>
+        <button (click)="switchToCardView()" class="btn btn-secondary">Карточки с редактированием</button>
+    
+        <div ngbDropdown class="btn-group">
+            <button class="btn btn-info btn-sm" ngbDropdownToggle>
+                Показать записи за...
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdown-basic">
+                <button class="btn btn-info btn-sm" ngbDropdownItem (click)="filterByPeriod('day')">Последний день</button>
+                <button class="btn btn-info btn-sm" ngbDropdownItem (click)="filterByPeriod('week')">Последняя неделя</button>
+                <button class="btn btn-info btn-sm" ngbDropdownItem (click)="filterByPeriod('month')">Последний месяц</button>
+                <button class="btn btn-info btn-sm" ngbDropdownItem (click)="filterByPeriod('all')">Все записи</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-block">
+        <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            (input)="searchRecords()" 
+            class="form-control" 
+            placeholder="Поиск по всем записям..."
+        />
+    </div>
+
+    <div *ngIf="isTableView">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Дата
+                        <button (click)="sortByDate()" class="btn btn-link btn-sm">↑↓</button>
+                    </th>
+                    <th>
+                        Время
+                        <!-- <button (click)="sortByTime()" class="btn btn-link btn-sm">↑↓</button> -->
+                    </th>
+                    <th>Запись</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rec of records">
+                    <td>{{ rec.time | date: 'dd.MM.yyyy' }}</td>
+                    <td>{{ rec.time | date: 'HH:mm' }}</td>
+                    <td>{{ rec.record }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!isTableView">
+        <div *ngIf="records && records.length > 0; else noRecords">
+            <ul>
+                <li *ngFor="let rec of records; let i = index">
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <div class="record-item">
+                                <strong>Запись №</strong> {{ i + 1 }}
+                                <span class="time-separator"></span>
+                            </div>
+                            <div class="record-item">
+                                <strong>Дата:</strong> {{ rec.time | date: 'dd.MM.yyyy' }}
+                                <span class="time-separator"></span>
+                                <strong>Время:</strong> {{ rec.time | date: 'HH:mm' }}
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="edit-btn" (click)="editRecord(rec)"><fa-icon [icon]="faPen"></fa-icon></button>
+                            <button (click)="deleteRecord(rec.id)"><fa-icon [icon]="faTrash"></fa-icon></button>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Запись:</strong> {{ rec.record }}
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Шаблон, если записей нет -->
+        <ng-template #noRecords>
+            <p>Записей нет.</p>
+        </ng-template>
+    </div>
+
+    <hr />
+    
+    <h3>Добавить новую запись</h3>
+    <div class="add-record-block">
+        <textarea [(ngModel)]="newRecordText" rows="2" placeholder="Введите текст..."></textarea>
+        <button (click)="addRecord()" class="btn btn-success">Добавить</button>
+    </div>
+</div>

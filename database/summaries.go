@@ -84,6 +84,9 @@ func GetOverallSummary(userID int) (string, error) {
 	var summary Summary
 
 	err := collection.FindOne(context.Background(), filter).Decode(&summary)
+	fmt.Println(err)
+	fmt.Println(userID)
+
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return "", fmt.Errorf("no summary found for user with ID %d", userID)

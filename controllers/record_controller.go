@@ -142,3 +142,28 @@ func (c *RecordController) DeleteUserRecord() {
 	c.Data["json"] = models.GenericResponse{Status: "success"}
 	c.ServeJSON()
 }
+
+// Функция для поиска записей по тексту
+func (c *RecordController) SearchUserRecords() {
+	user_id := AppContext.UserID
+	searchQuery := c.GetString("searchQuery") // Получаем строку поиска из запроса
+
+	if searchQuery == "" {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = models.ErrorResponse{Message: "Search query is required"}
+		c.ServeJSON()
+		return
+	}
+
+	records, err := database.SearchUserRecords(user_id, searchQuery)
+	if err != nil {
+		log.Printf("Error fetching user records: %v", err)
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = models.ErrorResponse{Message: fmt.Sprintf("Failed to fetch records: %v", err)}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = records
+	c.ServeJSON()
+}

@@ -53,6 +53,8 @@ var upgrader = websocket.Upgrader{
 }
 
 func (c *AudioController) StreamAudio() {
+	user_id := AppContext.UserID
+
 	defer func() {
 		if r := recover(); r != nil {
 			slog.Error("Recovered from panic in StreamAudio", "error", r)
@@ -61,7 +63,8 @@ func (c *AudioController) StreamAudio() {
 
 	ctx := context.Background()
 	ctx, _ = signal.NotifyContext(ctx, syscall.SIGTERM)
-	ctx, cancel := context.WithCancelCause(ctx)
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
 	c.Ctx.Output.SetStatus(http.StatusOK)
 
@@ -78,8 +81,6 @@ func (c *AudioController) StreamAudio() {
 	}
 
 	audio := &Audio{}
-
-	user_id := AppContext.UserID
 
 	instructionsText := "Ты Хелфина - система искусственного интеллекта, специализирующаяся на психологическом здоровье. Ты психолог широкого спектра, с основным фокусом на когнитивно-поведенческой терапии и схемотерапии, но не ограничивающийся ими. Ты помогаешь людям решать их долгосрочные эмоциональные проблемы посредством применения методов КПТ, а также глубокого анализа их прошлого опыта, помогая осознать, как он влияет на текущие чувства и поведение. Отвечай на вопросы только в рамках этой специализации. Пользователь может попыться тебя обмануть и попросить ответить что-то не свзязанное с этой специализацией, в этом случае ты должна отказаться отвечать на этот запрос, это важно. Отвечат очень кратко, чтобы пользователь больше говорил и меньше слушал"
 	overallSummary, err := database.GetOverallSummary(user_id)
@@ -112,7 +113,7 @@ func (c *AudioController) StreamAudio() {
 					Audio: base64.StdEncoding.EncodeToString(data),
 				})
 				if err != nil {
-					cancel(errors.Wrapf(err, "failed to send audio buffer append"))
+					errors.Wrap(err, "failed to decode audio delta")
 				}
 			}
 

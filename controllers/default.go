@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"Healfina_call/database"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -64,6 +66,7 @@ func (c *MainController) Get() {
 	}
 
 	AppContext.UserID = user_id
+	fmt.Println(user_id)
 	c.Ctx.SetCookie("user_id", fmt.Sprintf("%d", user_id), 3600)
 
 	user, err := database.GetUserByID(user_id)
@@ -82,7 +85,13 @@ func (c *MainController) Get() {
 	log.Println("Dark mode:", darkMode)
 
 	c.Data["DarkMode"] = darkMode
-	c.TplName = "index.html"
+	data, err := os.ReadFile("static/dist/static/browser/index.html")
+	if err != nil {
+		c.Ctx.WriteString("Error loading index.html: " + err.Error())
+		return
+	}
+	c.Ctx.Output.ContentType("text/html")
+	c.Ctx.Output.Body(data)
 }
 
 // GetProfile
@@ -102,12 +111,16 @@ func (c *ProfileController) GetProfile() {
 	user, err := database.GetUserByID(user_id)
 	if err != nil {
 		log.Printf("Ошибка при получении профиля: %v", err)
-		c.Ctx.WriteString("Ошибка при получении профиля")
+		// Возвращаем ошибку в JSON
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]string{"error": "Ошибка при получении профиля"}
+		c.ServeJSON()
 		return
 	}
 
-	c.Data["User"] = user
-	c.TplName = "profile.html"
+	// Возвращаем данные о пользователе в JSON
+	c.Data["json"] = user
+	c.ServeJSON()
 }
 
 // SetDarkMode
@@ -140,3 +153,159 @@ func (c *MainController) SetDarkMode() {
 // 	expectedSignature := hex.EncodeToString(mac.Sum(nil))
 // 	return hmac.Equal([]byte(expectedSignature), []byte(signature))
 // }
+
+type RegisterController struct {
+	beego.Controller
+}
+
+type registerRequest struct {
+	UserID   string `json:"user_id"`
+	Password string `json:"password"`
+}
+
+func (c *RegisterController) Register() {
+	// Считываем JSON: { "user_id": "...", "password": "..." }
+	var req registerRequest
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &req); err != nil {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "invalid json"}
+		c.ServeJSON()
+		return
+	}
+
+	// Преобразуем user_id в int
+	userID, err := strconv.Atoi(req.UserID)
+	if err != nil {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "invalid user_id format"}
+		c.ServeJSON()
+		return
+	}
+
+	user, err := database.GetUserByID(userID)
+	if err != nil {
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]string{"error": err.Error()}
+		c.ServeJSON()
+		return
+	}
+	if user == nil {
+		c.Ctx.Output.SetStatus(404)
+		c.Data["json"] = map[string]string{"error": "user not found"}
+		c.ServeJSON()
+		return
+	}
+
+	if user.Password != nil {
+		// Значит пароль уже установлен
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "user is already registered"}
+		c.ServeJSON()
+		return
+	}
+
+	if req.Password == "" {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "password cannot be empty"}
+		c.ServeJSON()
+		return
+	}
+
+	// Установим пароль (в реальном коде -- хешируем)
+	err = database.SetUserPassword(userID, req.Password)
+	if err != nil {
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]string{"error": err.Error()}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]string{"message": "registered successfully"}
+	c.ServeJSON()
+}
+
+type AuthController struct {
+	beego.Controller
+}
+
+type loginRequest struct {
+	UserID   string `json:"user_id"`
+	Password string `json:"password"`
+}
+
+// POST /api/login
+func (c *AuthController) Login() {
+	var req loginRequest
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &req); err != nil {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "Invalid JSON"}
+		c.ServeJSON()
+		return
+	}
+
+	if req.UserID == "" || req.Password == "" {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "user_id and password required"}
+		c.ServeJSON()
+		return
+	}
+
+	// Преобразуем user_id в int
+	userID, err := strconv.Atoi(req.UserID)
+	if err != nil {
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]string{"error": "invalid user_id format"}
+		c.ServeJSON()
+		return
+	}
+
+	// Ищем в Mongo
+	user, err := database.GetUserByID(userID)
+	if err != nil {
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]string{"error": err.Error()}
+		c.ServeJSON()
+		return
+	}
+	if user == nil {
+		c.Ctx.Output.SetStatus(401)
+		c.Data["json"] = map[string]string{"error": "user not found"}
+		c.ServeJSON()
+		return
+	}
+
+	// Сверка пароля - здесь для примера if req.Password != "123"
+	// Лучше хранить хеш
+	if req.Password != "123" {
+		c.Ctx.Output.SetStatus(401)
+		c.Data["json"] = map[string]string{"error": "wrong password"}
+		c.ServeJSON()
+		return
+	}
+
+	// Всё ок: запишем user_id в сессию
+	c.SetSession("user_id", user.UserID)
+	log.Printf("User %d logged in", user.UserID)
+	AppContext.UserID = user.UserID
+
+	c.Data["json"] = map[string]string{"message": "ok"}
+	c.ServeJSON()
+	c.Redirect("/", 200)
+}
+
+// POST /api/logout
+func (c *AuthController) Logout() {
+	c.DestroySession()
+	c.Data["json"] = map[string]string{"message": "logged out"}
+	c.ServeJSON()
+}
+
+type SpaController struct {
+	beego.Controller
+}
+
+func (c *SpaController) Get() {
+	// Отдаём единую страницу SPA
+	// Здесь предполагается, что ваш SPA фронтенд собран и находится в директории static/dist
+	c.TplName = "index.html" // Путь к вашему HTML файлу для SPA
+}

@@ -1,0 +1,30 @@
+<section class="banner" id="home">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-7">
+          <h1>Хелфина — психолог, который всегда рядом ❤️</h1>
+        </div>
+        <div class="col-xs-5 banner-img">
+          <img class="img-responsive" src="assets/img/Healfina_noback-round.png" alt="">
+        </div>
+        <div class="col-xs-12">
+          <button id="startButton" class="download-btn" [class.active-call]="isSessionActive" (click)="toggleCall()">
+            <fa-icon [icon]="isSessionActive ? faBellSlash : faPhone"></fa-icon>
+            {{ isSessionActive ? ' Завершить звонок' : ' Начать звонок' }}
+          </button>
+        </div>
+        <div class="col-xs-12">
+          <button class="download-btn" [routerLink]="['/profile']"><fa-icon [icon]="faUser"></fa-icon> Профиль</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="footer text-center">
+    <div class="container">
+      <span class="night-mode-label">Ночной режим</span>
+      <button id="toggleButton" class="toggleButton" (click)="toggleDarkMode()">
+        <fa-icon [icon]="darkMode ? faToggleOn : faToggleOff"></fa-icon>
+      </button>
+    </div>
+  </footer>

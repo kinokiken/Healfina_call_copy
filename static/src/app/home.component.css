@@ -1,0 +1,271 @@
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'Arial', sans-serif;
+	box-sizing: border-box;
+}
+li{
+	list-style: none;
+}
+a:hover, a:visited, a{
+	text-decoration: none;
+}
+h4{
+	font-size: 14px;
+	color: #008ed6;
+	text-transform: uppercase;
+	margin-top: 40px;
+	font-weight: 700;
+}
+h2{
+	font-size: 36px;
+	color: #1a1a1a;
+	font-weight: 600;
+	margin-bottom: 25px;
+	margin-top: 0;
+}
+
+.top-header{
+	margin-top: -25px;
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+		transition: all .7s ease 0s;
+	-webkit-transition: all .7s ease 0s;
+	-moz-transition: all .7s ease 0s;
+	-o-transition: all .7s ease 0s;
+	-ms-transition: all .7s ease 0s;
+}
+.top-header img.logo{
+	width: 150px;
+	height: 70px;
+	transition: all .7s ease 0s;
+	-webkit-transition: all .7s ease 0s;
+	-moz-transition: all .7s ease 0s;
+	-o-transition: all .7s ease 0s;
+	-ms-transition: all .7s ease 0s;
+}
+.top-header button{
+	margin-top: 30px;
+}
+.navbar-default {
+  background-color: #ffffff;
+  border-color: transparent;
+  margin-bottom: 0;
+}
+.nav-bar{
+	margin-top: 28px;
+	transition: all .7s ease 0s;
+	-webkit-transition: all .7s ease 0s;
+	-moz-transition: all .7s ease 0s;
+	-o-transition: all .7s ease 0s;
+	-ms-transition: all .7s ease 0s;
+}
+.navbar-toggle span{
+	color: #1e10bd;
+}
+ul.nav{
+	margin-top: 25px;
+	padding: 0;
+}
+.navbar-default .navbar-nav>li>a {
+ 	font-size: 16px;
+	color: #9a9999;
+	text-transform: capitalize;
+	transition: all .7s ease 0s;
+	-webkit-transition: all .7s ease 0s;
+	-moz-transition: all .7s ease 0s;
+	-o-transition: all .7s ease 0s;
+	-ms-transition: all .7s ease 0s;
+	padding: 8px 0;
+	margin:0 15px;
+	font-weight: 600;
+}
+.navbar-default .navbar-nav>li>a:hover{
+	color: #161616;
+	border-bottom: 2px solid #008ed6;
+}
+.navbar-default .navbar-nav>li>a.active{
+	color: #1f1f1f;
+	border-bottom: 2px solid #008ed6;
+}
+.navbar-default .navbar-toggle {
+  border-color: #fff;
+}
+
+.banner{
+	background-repeat: no-repeat;
+	background-position: center;
+	overflow: hidden;
+	-webkit-background-size: cover;
+	background-size: cover;
+}
+.banner h3{
+	font-size: 14px;
+	color: #3cadee;
+	text-transform: uppercase;
+	margin-top: 290px;
+	font-weight: 700;
+}
+.banner p{
+	font-size: 18px;
+	color: #3d3d3d;
+	margin-top: 50px;
+	margin-bottom: 10px;
+	line-height: 2;
+	font-weight: 600;
+}
+.download-btn{
+	display: block;
+	width: 400px;
+	height: 70px;
+	background: #008ed6;
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 25px;
+	border-radius: 4px;
+	border: 1px solid #444348;
+	margin-top: 60px;
+	margin-right: 15px;
+	font-weight: bold;
+	font-family:Arial, Helvetica, sans-serif;
+	border-radius: 20px;
+	margin-bottom: 215px;
+}
+.download-btn.active-call {
+    background-color: rgba(226, 78, 67, 0.877); /* Фон кнопки во время звонка */
+    color: white;
+}
+.banner-img {
+	position: relative;
+  }
+.banner img{
+	position: absolute;
+	margin-bottom:20px;
+	left: 50%; 
+	width: 400px;   /* Задайте нужную ширину */
+	height: 400px;
+}
+.footer i.fa{
+	color: #008ed6;
+	  line-height: 1;
+	  border-radius: 50%;
+	  cursor: pointer;
+	  transition: all .7s ease 0s;
+	  -webkit-transition: all .7s ease 0s;
+	  -moz-transition: all .7s ease 0s;
+	  -o-transition: all .7s ease 0s;
+	  -ms-transition: all .7s ease 0s;
+}
+
+.container {
+    display: flex; /* Используем flexbox для выравнивания элементов */
+    align-items: center; /* Выравнивание по центру по вертикали */
+	justify-content: center;
+	line-height: 40px;
+}
+
+.night-mode-label {
+    display: inline-block; /* Позволяет задать высоту */
+    height: 40px; /* Задайте нужную высоту */
+    line-height: 40px; /* Вертикальное выравнивание текста по центру */
+    margin-right: 10px; /* Отступ между текстом и кнопкой */
+}
+
+.toggleButton {
+	background-color: transparent; /* Прозрачный фон */
+    border: none; /* Убираем рамку */
+	font-size: 40px;
+	height: 50px;
+	width: 50px;
+	display: flex; /* Используем Flexbox для выравнивания */
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали (если необходимо) */
+	
+}
+
+/* sm */
+@media (min-width: 768px) and (max-width: 991px) {
+	.banner h3 {
+	  font-size: 13px;
+	  margin-top: 80px;
+	}
+	.banner h1 {
+	  font-size: 30px;
+	  margin-top: 200px;
+	}
+	.banner img{
+		position: absolute;
+		margin-top:150px;
+		margin-bottom:20px;
+	}
+	.banner p {
+	  font-size: 15px;
+	  margin-top: 20px;
+	}
+	.pricing-slide p {
+	  font-size: 20px;
+	  margin-top: 50px;
+	}
+	.item img {
+	  margin-bottom: 120px;
+	}
+	.download p {
+	  font-size: 25px;
+	  padding: 30px 0;
+	}
+	.download button{
+		margin-top: 13px;
+		margin-bottom: 0;
+		margin-left: 16px;
+	}
+}
+
+@media (max-width: 767px) {
+	.col-xs-5 {
+		width: 100%;
+	}
+	.col-xs-7 {
+		width: 100%;
+	}
+	.col-xs-6 {
+		width: 100%;
+	}
+	.banner img {
+		width: 80%;
+		height: auto;
+		margin-top: -120%;
+		margin-left: 10%;
+		left: 0%; 
+	}
+	.banner h1 {
+	  font-size: 28px;
+	  font-size: 7.5vw;
+	  margin-top: 100%;
+	  text-align: center;
+	}
+	.download-btn {
+	justify-content: center;  /* Для центрирования текста внутри кнопки */
+	align-items: center;
+	  width: 100% !important;
+	  font-size: 6vw;
+	  margin-top: 10px;
+	  margin-right: 0px;
+	  margin-bottom: 10px;
+	}
+	h4 {
+	  font-size: 10px;
+	  margin-top: 30px;
+	  font-weight: 600;
+	}
+	h2 {
+	  font-size: 25px;
+	  margin-bottom: 15px;
+	}
+  	.footer i.fa{
+  		padding: 15px;
+  	}
+  	.footer p{
+  		font-size: 12px;
+  	}
+}

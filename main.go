@@ -16,6 +16,8 @@ import (
 // @BasePath /
 func main() {
 	database.InitMongoDB()
+	beego.BConfig.WebConfig.Session.SessionOn = true
+	beego.BConfig.WebConfig.ViewsPath = "static/dist/static/browser"
 	if database.Client == nil {
 		log.Fatal("MongoDB client is not initialized!")
 	}

@@ -1,0 +1,130 @@
+.header {
+    display: flex;
+    justify-content: space-between;  /* Пространство между элементами: кнопка слева, иконка справа */
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;  /* Светлый фон для шапки */
+}
+
+.svg-icon {
+    width: 200px;  /* Размер картинки */
+    height: 50px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+.row {
+    margin-left: 1%;
+    margin-right: 1%;
+    display: flex;
+    justify-content: space-between;  /* Пространство между элементами: кнопка слева, иконка справа */
+    align-items: center;
+}
+.col-xs-3 {
+    display: flex;
+    text-align: right;
+  }
+  
+  button {
+    text-align: right;
+  }
+  
+.record-item {
+    display: flex;
+    align-items: center;  /* Выравнивание по вертикали */
+    margin-bottom: 10px;
+  }
+  
+.record-details {
+    margin-left: 20px;  /* Отступ для текста, чтобы он был правее кнопки */
+  }
+  
+.record-header {
+    margin-bottom: 10px; /* Отступ между строками в заголовке записи */
+  }
+  
+.record-item button {
+    margin-right: 15px;  /* Отступ от кнопки к тексту */
+    background-color: #4bc2f0;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+button:hover {
+    background-color: #2676d7;
+  }
+  
+.time-separator {
+    margin: 0 10px;  /* Промежуток между датой и временем */
+  }
+  
+ul {
+    padding-left: 0;  /* Убираем отступы по умолчанию у списка */
+    list-style-type: none;
+  }
+  
+li {
+    padding: 10px 0;  /* Вертикальные отступы внутри записи */
+    border-bottom: 1px solid #ddd;  /* Линия между записями */
+  }
+  
+button {
+    margin-left: 10px;
+    margin-right: 15px;  
+    background-color: #4bc2f0;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 25px;
+}
+.view-toggle {
+    display: flex;               /* Используем Flexbox для выравнивания */
+    gap: 10px;                   /* Расстояние между кнопками */
+    justify-content: flex-start; /* Выравнивание по левому краю (по умолчанию) */
+    align-items: start;         /* Выравнивание по центру по вертикали */
+}
+
+.view-toggle .btn {
+    padding: 5px 10px;   /* Уменьшаем отступы для кнопок */
+    font-size: 1rem;  /* Уменьшаем размер шрифта */
+    align-items: center;
+}
+  
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .view-toggle button {
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .view-toggle button:hover {
+    background-color: #0056b3;
+  }
+
+.btn-sm {
+    font-size: 12px; /* Уменьшите размер текста */
+    padding: 5px 10px; /* Уменьшите отступы внутри кнопки */
+  }
